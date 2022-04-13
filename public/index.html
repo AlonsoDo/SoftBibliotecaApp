@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Soft Biblioteca App</title>
+    <script src="js/jquery-2.2.1.min.js"></script>    
+    <link rel="stylesheet" type="text/css" media="screen" href="css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css"/>
+    
+    <script src="js/grid.locale-en.js" type="text/javascript"></script>
+    <script src="js/jquery.jqGrid.min.js" type="text/javascript"></script>
+    
+    <script src="js/socio.js"></script>
+    <script src="js/libros.js"></script>
+    <script src="js/grids.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js"></script>    
+    <link type="text/css" href="css/mystyle.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+        
+    <script type="text/javascript">
+        
+        $(document).ready(function(){
+            
+            IniMasterGrid();
+            IniDetailGrid();
+            
+            $('#CargarLibro').click(function(){
+                    if ($('#codelibro').val()=='00000'){
+                        if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+                        $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning');  
+                    }                
+                    $('#mensage').text('Ningun Libro Cargado');
+                    $('#titulo').text('Atenction!');
+                    $('#dialoginfo').modal({
+                        backdrop:'static',
+                        keyboard:false  
+                    });   
+                }else{
+                    CargarLibro();
+                }                
+            });
+            
+            $('#vistalibro').hide();
+            $('#vistamovimiento').hide();
+            
+            $('#librolink').click(function(){
+                $('#vistalibro').show();
+                $('#vistasocio').hide();
+                $('#vistamovimiento').hide();
+            });
+            
+            $('#sociolink').click(function(){
+                $('#vistalibro').hide();
+                $('#vistasocio').show();
+                $('#vistamovimiento').hide();
+            });
+            
+            $('#movimientolink').click(function(){
+                $('#vistamovimiento').show();
+                $('#vistasocio').hide();
+                $('#vistalibro').hide();
+            });
+            
+            $('#DeleteLibro').prop('disabled',true);
+            
+            $('#NewSocio').click(function(){
+                NewSocio();
+                $('#DeleteSocio').prop('disabled',true);
+                $('#SaveSocio').prop('disabled',true);
+                $('#ResetSocio').prop('disabled',true);
+            });
+            
+            $('#CargarSocio').click(function(){
+                CargarSocio();
+            });
+            
+            $('#SaveSocio').click(function(){                
+                if (UpdateMode == 'SaveSocio'){
+                    CrearSocio();
+                }else{
+                    UpdateSocio();
+                }
+                UpdateMode = 'UpdateSocio';
+                $('#DeleteSocio').prop('disabled',true);
+                $('#SaveSocio').prop('disabled',true);
+                $('#ResetSocio').prop('disabled',true);
+            });
+                        
+            $('#BuscarSocio').click(function(){                
+                BuscarSocio();               
+            });
+            
+            $('#BuscarSocioFiltro').click(function(){                
+                BuscarSocioFiltro();               
+            });            
+            
+            $('#DeleteSocio').prop('disabled',true);
+            $('#SaveSocio').prop('disabled',true);
+            $('#ResetSocio').prop('disabled',true);
+            $('#NextSocio').prop('disabled',true);
+            $('#EndSocio').prop('disabled',true);            
+            
+            $('#nombresocio').click(function(){
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }                
+            });
+            
+            $('#primerapellidosocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#segundoapellidosocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#dnisocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#direccionsocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#datepicker').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#datepicker2').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#emailsocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#codigopostalsocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#ciudadsocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#personacontactosocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#mobilsocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#fijosocio').click(function(){                
+                if ((UpdateMode == 'SaveSocio') || (aSocios.length>0)){
+                   $('#ResetSocio').prop('disabled',false);
+                   $('#SaveSocio').prop('disabled',false);
+                }
+            });
+            
+            $('#DeleteSocio').click(function(){
+                $('#dialoginfo2').modal({
+                    backdrop:'static',
+                    keyboard:false  
+                })
+            });
+            
+            $('#aceptarborrar').click(function(){                
+                AceptarBorrar();
+            });
+            
+            $('#NextSocio').click(function(){                
+                NextSocio();
+            });
+            
+            $('#EndSocio').click(function(){                
+                EndSocio();
+            });
+            
+            $('#ResetSocio').click(function(){                
+                ResetSocio();
+            });
+            
+            $('#PrevSocio').click(function(){                
+                PrevSocio();
+            });
+            
+            $('#IniSocio').click(function(){                
+                IniSocio();
+            });
+            
+            $('#SaveLibro').click(function(){                
+                if (UpdateModeLibro == 'Save'){                                    
+                    CrearLibro();
+                }else{
+                    UpdateLibro();
+                }
+                $('#ResetLibro').prop('disabled',true);
+                $('#SaveLibro').prop('disabled',true);
+            });
+            
+            $('#NewLibro').click(function(){                
+                NuevoLibro();
+                UpdateModeLibro = 'Save';
+            });
+            
+            $('#BuscarLibro').click(function(){                
+                BuscarLibro();               
+            });
+            
+            $('#BuscarLibroFiltro').click(function(){                
+                BuscarLibroFiltro();               
+            });
+            
+            $('#DeleteLibro').click(function(){
+                $('#dialoginfo3').modal({
+                    backdrop:'static',
+                    keyboard:false  
+                })
+            });
+            
+            $('#aceptarborrarlibro').click(function(){
+                AceptarBorrarLibro();
+            });
+            
+            $('#IniLibro').click(function(){
+                IniLibro();
+            });
+            
+            $('#PrevLibro').click(function(){
+                PrevLibro();
+            });
+            
+            $('#NextLibro').click(function(){
+                NextLibro();
+            });
+            
+            $('#EndLibro').click(function(){
+                EndLibro();
+            });
+            
+            $('#ResetLibro').click(function(){
+                ResetLibro();
+            });
+            
+            $('#titulolibro').click(function(){                
+                if ((UpdateModeLibro == 'Save') || (aLibros.length>0)){
+                   $('#ResetLibro').prop('disabled',false);
+                   $('#SaveLibro').prop('disabled',false);
+                }
+            });
+            
+            $('#autorlibro').click(function(){                
+                if ((UpdateModeLibro == 'Save') || (aLibros.length>0)){
+                   $('#ResetLibro').prop('disabled',false);
+                   $('#SaveLibro').prop('disabled',false);
+                }
+            });
+            
+            $('#editoriallibro').click(function(){                
+                if ((UpdateModeLibro == 'Save') || (aLibros.length>0)){
+                   $('#ResetLibro').prop('disabled',false);
+                   $('#SaveLibro').prop('disabled',false);
+                }
+            });
+            
+            $('#fechaaltalibro').click(function(){                
+                if ((UpdateModeLibro == 'Save') || (aLibros.length>0)){
+                   $('#ResetLibro').prop('disabled',false);
+                   $('#SaveLibro').prop('disabled',false);
+                }
+            });
+            
+            $('#idiomaoriginallibro').click(function(){                
+                if ((UpdateModeLibro == 'Save') || (aLibros.length>0)){
+                   $('#ResetLibro').prop('disabled',false);
+                   $('#SaveLibro').prop('disabled',false);
+                }
+            });            
+            
+            $('#diaspermitidoslibro').click(function(){                
+                if ((UpdateModeLibro == 'Save') || (aLibros.length>0)){
+                   $('#ResetLibro').prop('disabled',false);
+                   $('#SaveLibro').prop('disabled',false);
+                }
+            });
+            
+            $('#ResetLibro').click(function(){ 
+                $('#ResetLibro').prop('disabled',true);
+                $('#SaveLibro').prop('disabled',true);
+            });
+            
+            $('#DeleteRow').click(function(){ 
+                var toDelete = $("#detail").jqGrid('getGridParam','selrow');
+                $('#detail').jqGrid('delRowData',toDelete);                    
+            });
+            
+            $('#SalvarDetailGrid').click(function(){
+                SalvarDetailGrid();    
+            });
+            
+            $('#DeleteRowMasterGrid').click(function(){
+                DeleteRowMasterGrid();    
+            });
+            
+            $('#aceptarborrargridmaster').click(function(){
+                AceptarBorrarGridMaster();
+            });
+                        
+        });  // End 
+        
+    </script>
+</head>
+<body>
+    <div style="width:1000px;">
+        <h1 style="float:left; margin-left:30px;">Soft Biblioteca App</h1>        
+     </div>   
+    
+    <div id="labels" style="float:left; background-color:#e8e8e8; border:0px black solid; width:1000px; height:40px; margin-top:16px;">
+         <a id="sociolink" href="#" style="margin:6px 0px 0px 30px; float:left; font-weight:bold; font-size:16px;">Socio</a>
+         <a id="librolink" href="#" style="margin:6px 0px 0px 30px; float:left; font-weight:bold; font-size:16px;">Libro</a>
+         <a id="movimientolink" href="#" style="margin:6px 0px 0px 30px; float:left; font-weight:bold; font-size:16px;">Movimiento</a>
+    </div>
+    
+    <!-- Socio -->
+    <div id="vistasocio" style="float:left; background-color:#e8e8e8; border:0px black solid; width:1000px; height:520px; margin-top:16px;">
+        
+        <label style="margin:25px 0px 0px 30px; float:left; font-weight:bold; font-size:16px;">Nonbre de Socio:</label>
+        <input type="text" id="nombresocio" maxlength="100" class="form-control" placeholder="Introducir Nonbre de Socio" style="float:left; margin-right:10px; margin-left:16px; margin-top:20px; width:300px; font-weight:bold; font-size:16px;"/>
+        
+        <label style="float:left; margin-top:25px; margin-left:20px; font-weight:bold; font-size:16px;">Primer Apellido:</label>
+        <input type="text" id="primerapellidosocio" class="form-control" maxlength="100" placeholder="Introducir Primer Apellido" style="float:left; margin-left:6px; margin-top:20px; width:300px; font-weight:bold; font-size:16px;"/>
+        
+        <label style="margin:25px 0px 0px 30px; float:left; font-weight:bold; font-size:16px;">Segundo Apellido:</label>
+        <input type="text" id="segundoapellidosocio" class="form-control" maxlength="100" placeholder="Introducir Segundo Apellido" style="float:left; margin-right:100px; margin-left:6px; margin-top:20px; width:300px; font-weight:bold; font-size:16px;"/>
+                         
+        <label style="margin:25px 0px 0px 20px; float:left; font-weight:bold; font-size:16px;">DNI:</label>
+        <input type="text" id="dnisocio" class="form-control" maxlength="10" placeholder="Introducir DNI" style="float:left; margin-left:6px; margin-top:20px; width:180px; font-weight:bold; font-size:16px;"/>
+                                              
+        <div style="float:left; border:0px black solid; width:500px; height:60px; margin-top:16px;">    
+            <label style="margin:10px 0px 0px 30px; float:left; font-weight:bold; font-size:16px;">Fecha de Naciniento:</label>
+            <input style="margin:10px 0px 0px 10px; float:left; font-weight:bold; font-size:16px;" id="datepicker" width="288" size="22" type="text" class="form-control"/>
+        </div>
+        <div style="float:left; border:0px black solid; width:500px; height:60px; margin-top:16px;">    
+            <label style="margin:10px 0px 0px 20px; float:left; font-weight:bold; font-size:16px;">Fecha de Alta:</label>
+            <input style="margin:10px 0px 0px 10px; float:left; font-weight:bold; font-size:16px;" id="datepicker2" width="276" size="22" type="text" class="form-control"/>
+        </div>
+        
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Direccion:</label>
+        <input type="text" id="direccionsocio" class="form-control" maxlength="300" placeholder="Introducir Direccion" style="float:left; margin-left:6px; margin-top:20px; width:506px; font-weight:bold; font-size:16px;"/>
+               
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Email:</label>        
+        <input type="text" id="emailsocio" class="form-control" maxlength="100" placeholder="Introducir Direccion de Email" style="float:left; margin-left:6px; margin-top:20px; width:266px; font-weight:bold; font-size:16px;"/>
+        
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Codigo Postal:</label>
+        <input type="text" id="codigopostalsocio" class="form-control" maxlength="5" placeholder="00000" style="float:left; margin-left:6px; margin-top:20px; width:80px; font-weight:bold; font-size:16px;"/>
+        
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Ciudad:</label>
+        <input type="text" id="ciudadsocio" class="form-control" maxlength="50" placeholder="Introducir Ciudad" style="float:left; margin-left:6px; margin-top:20px; width:240px; font-weight:bold; font-size:16px;"/>
+        
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Persona Contacto:</label>
+        <input type="text" id="personacontactosocio" class="form-control" maxlength="100" placeholder="Introducir Persona" style="float:left; margin-left:6px; margin-top:20px; width:224px; font-weight:bold; font-size:16px;"/>
+                
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Telefono Movil:</label>
+        <input type="text" id="mobilsocio" class="form-control" maxlength="15" placeholder="Introducir Movil" style="float:left; margin-left:6px; margin-top:20px; width:180px; font-weight:bold; font-size:16px;"/>
+        
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Telefono Fijo:</label>
+        <input type="text" id="fijosocio" class="form-control" maxlength="15" placeholder="Introducir Fijo" style="float:left; margin-left:6px; margin-top:20px; width:180px; font-weight:bold; font-size:16px;"/>
+               
+        <label style="margin-left:50px;  margin-top:20px; display:block; float:left; font-weight:bold; font-size:16px;">Codigo de Socio:</label>
+        <input type="text" id="codesocio" readonly class="form-control" maxlength="5" placeholder="00000" style="float:left; margin-left:10px; margin-top:16px; width:80px; font-weight:bold; font-size:16px;"/>
+        
+        <div style="float:left; border:0px black solid; width:420px; height:60px; margin-top:16px;">    
+            <button type="button" id="IniSocio" disabled class="btn btn-default btn-lg" title="Inicial" style="margin-left:50px; float:left;"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span></button>
+            <button type="button" id="PrevSocio" disabled class="btn btn-default btn-lg" title="Anterior" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+            <button type="button" id="NextSocio" disabled class="btn btn-default btn-lg" title="Siguiente" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+            <button type="button" id="EndSocio" disabled class="btn btn-default btn-lg" title="Final" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></button>
+            <button type="button" id="NewSocio" class="btn btn-default btn-lg" title="Nuevo" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+            <button type="button" id="DeleteSocio" disabled class="btn btn-default btn-lg" title="Borrar" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button>
+            <button type="button" id="SaveSocio" class="btn btn-default btn-lg" title="Salvar" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+            <button type="button" id="ResetSocio" disabled class="btn btn-default btn-lg" title="Reset" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+        </div>
+        
+        <button type="button" id="CargarSocio" disabled class="btn btn-default btn-lg" title="Cargar Socio" style="margin-top:16px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                
+        <div style="float:left; border:0px black solid; width:788px; height:60px; margin-top:16px;">    
+                
+            <div class="col-xs-1">
+                <div class="form-group">            
+                    <button type="button" id="BuscarSocio" class="btn btn-default btn-lg" title="Buscar Socio" style="margin-top:8px; margin-left:20px; float:left;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                </div>                
+            </div>
+            
+            <div class="col-xs-1">
+                <div class="form-group">            
+                    <button type="button" id="BuscarSocioFiltro" class="btn btn-default btn-lg" title="Filtrar Socio" style="margin-top:8px; margin-left:4px; float:left;"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span></button>
+                </div>                
+            </div>
+            
+            <div class="col-xs-1">
+                <div class="form-group">            
+                    <button type="button" id="SetSocio" class="btn btn-default btn-lg" title="Restabrecer Socio" style="margin-top:8px; margin-left:20px; float:left;"><span class="glyphicon glyphicon-random" aria-hidden="true"></span></button>
+                </div>                
+            </div>
+            
+            <input type="text" id="contentbuscarsocio" class="form-control" maxlength="200" placeholder="Buscar Socio" style="float:left; margin-left:16px; margin-top:8px; width:230px; font-weight:bold; font-size:16px;"/>
+                    
+            <div class="row" style="margin-left:1px; margin-top:10px;">
+                <div class="col-xs-9">
+                    <div class="form-group">                                           
+                        <select style="float:left; margin-top:40px; width:100px;" id="buscarsocio" class="selectpicker form-control">
+                            <option value="IdSocio" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Codigo de Socio</label>">Codigo de Socio</option>
+                            <option value="Nombre" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Nombre del Socio</label>">Nombre del Socio</option>
+                            <option value="PrimerApellido" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Primer Apellido</label>">Primer Apellido</option>
+                            <option value="SegundoApellido" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Segundo Apellido</label>">Segundo Apellido</option>
+                            <option value="FechaNacimiento" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Fecha de Nacimiento</label>">Fecha de Nacimiento</option>
+                            <option value="FechaAlta" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Fecha de Alta</label>">Fecha de Alta</option>                            
+                            <option value="Email" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Email</label>">Email</option>
+                            <option value="CodigoPostal" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Codigo Postal</label>">Codigo Postal</option>
+                            <option value="Ciudad" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Ciudad</label>">Ciudad</option>
+                            <option value="DNI" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>DNI</label>">DNI</option>
+                            <option value="TelefonoMovil" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Mobil</label>">Telefono Mobil</option>
+                            <option value="TelefonoFijo" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Fijo</label>">Telefono Fijo</option>
+                        </select>                        
+                    </div>                
+                </div>                
+             </div>            
+        </div>        
+        
+        </div></div>        
+    </div>
+    
+    <!-- Libros-->
+    
+    <div id="vistalibro" style="float:left; background-color:#e8e8e8; border:0px black solid; width:1000px; height:460px; margin-top:16px;">
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Titulo:</label>
+        <input type="text" id="titulolibro" class="form-control" maxlength="200" placeholder="Introducir Titulo Libro" style="float:left; margin-left:6px; margin-top:20px; width:880px; font-weight:bold; font-size:16px;"/>
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Autor:</label>
+        <input type="text" id="autorlibro" class="form-control" maxlength="200" placeholder="Introducir Autor Libro" style="float:left; margin-left:6px; margin-top:20px; width:880px; font-weight:bold; font-size:16px;"/>
+        <label style="margin:25px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Editorial:</label>
+        <input type="text" id="editoriallibro" class="form-control" maxlength="100" placeholder="Introducir Editorial Libro" style="float:left; margin-left:6px; margin-top:20px; width:380px; font-weight:bold; font-size:16px;"/>
+        <div style="float:left; border:0px black solid; width:500px; height:60px; margin-top:16px;">    
+            <label style="margin:10px 0px 0px 20px; float:left; font-weight:bold; font-size:16px;">Fecha de Alta:</label>
+            <input style="margin:10px 0px 0px 10px; float:left; font-weight:bold; font-size:16px; width:200px; " id="fechaaltalibro" width="288" size="22" type="text" class="form-control"/>
+        </div>
+        <label style="margin:10px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Idioma Original:</label>
+        <input type="text" id="idiomaoriginallibro" class="form-control" maxlength="100" placeholder="Introducir Idioma Original" style="float:left; margin-left:6px; margin-top:5px; width:380px; font-weight:bold; font-size:16px;"/>
+        <label style="margin-left:18px; margin-top:8px; display:block; float:left; font-weight:bold; font-size:16px;">Dias Permitidos:</label>
+        <input type="text" id="diaspermitidoslibro" class="form-control" maxlength="5" style="float:left; margin-left:8px; margin-top:5px; width:50px; font-weight:bold; font-size:16px;"/>
+        <label style="margin-left:12px;  margin-top:10px; display:block; float:left; font-weight:bold; font-size:16px;">Codigo de Libro:</label>
+        <input type="text" id="codelibro" readonly class="form-control" maxlength="5" placeholder="00000" style="float:left; margin-left:10px; margin-top:6px; width:80px; font-weight:bold; font-size:16px;"/>
+        <div style="float:left; border:0px black solid; width:420px; height:60px; margin-top:16px;">    
+            <button type="button" id="IniLibro" disabled class="btn btn-default btn-lg" title="Inicial" style="margin-left:50px; float:left;"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span></button>
+            <button type="button" id="PrevLibro" disabled class="btn btn-default btn-lg" title="Anterior" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+            <button type="button" id="NextLibro" disabled class="btn btn-default btn-lg" title="Siguiente" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+            <button type="button" id="EndLibro" disabled class="btn btn-default btn-lg" title="Final" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></button>
+            <button type="button" id="NewLibro" class="btn btn-default btn-lg" title="Nuevo" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+            <button type="button" id="DeleteLibro" disabled class="btn btn-default btn-lg" title="Borrar" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button>
+            <button type="button" id="SaveLibro" disabled class="btn btn-default btn-lg" title="Salvar" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+            <button type="button" id="ResetLibro" disabled class="btn btn-default btn-lg" title="Reset" style="margin-left:10px; float:left;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+        </div>
+        
+        <button type="button" id="CargarLibro" disabled class="btn btn-default btn-lg" title="Cargar Libro" style="margin-top:16px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+         
+        <div style="float:left; border:0px black solid; width:788px; height:60px; margin-top:16px;">                        
+            <button type="button" id="BuscarLibro" class="btn btn-default btn-lg" title="Buscar Libro" style="margin-top:8px; margin-left:20px; float:left;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                        
+            <div class="col-xs-1">
+                <div class="form-group">            
+                    <button type="button" id="BuscarLibroFiltro" class="btn btn-default btn-lg" title="Filtrar Libro" style="margin-top:8px; margin-left:4px; float:left;"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span></button>
+                </div>                
+            </div>
+            
+            <div class="col-xs-1">
+                <div class="form-group">            
+                    <button type="button" id="SetLibro" class="btn btn-default btn-lg" title="Restabrecer Libro" style="margin-top:8px; margin-left:20px; float:left;"><span class="glyphicon glyphicon-random" aria-hidden="true"></span></button>
+                </div>                
+            </div>
+            
+            <input type="text" id="contentbuscarlibro" class="form-control" maxlength="200" placeholder="Buscar Libro" style="float:left; margin-left:16px; margin-top:8px; width:230px; font-weight:bold; font-size:16px;"/>
+                    
+            <div class="row" style="margin-left:1px; margin-top:10px;">
+                <div class="col-xs-9">
+                    <div class="form-group">                                           
+                        <select style="float:left; margin-top:40px; width:100px;" id="buscarlibro" class="selectpicker form-control">
+                            <option value="IdLibro" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Codigo del Libro</label>">Codigo del Libro</option>
+                            <option value="Titulo" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Titulo del Libro</label>">Titulo del Libro</option>
+                            <option value="Autor" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Autor del Libro</label>">Autor del Libro</option>
+                            <option value="Editorial" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Editorial del Libro</label>">Editorial del Libro</option>
+                            <option value="FechaDeAlta" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Fecha de Alta</label>">Fecha de Alta</option>
+                            <option value="IdiomaOriginal" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Idioma Original</label>">Idioma Original</option>                            
+                            <option value="DiasPermitidos" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Dias Permitidos</label>">Dias Permitidos</option>
+                        </select>                        
+                    </div>                
+                </div>                
+             </div>         
+        </div>
+    </div>
+    
+    <div id="vistamovimiento" style="float:left; background-color:#e8e8e8; border:0px black solid; width:1000px; height:600px; margin-top:16px;">
+        <div style="margin-left:30px; margin-top:30px;">
+            <table id="master"></table>
+        </div>
+        <hr class="colored" style="margin-top:10px;"/>
+        <button type="button" id="DeleteRowMasterGrid" disabled class="btn btn-default btn-lg" title="Borrar" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button>
+        <hr class="colored" style="margin-top:46px;"/>        
+        <div style="margin-left:30px; margin-top:60px;">
+            <table id="detail"></table>
+        </div>
+        <hr class="colored" style="margin-top:10px;"/>
+        <button type="button" id="SalvarDetailGrid" disabled class="btn btn-default btn-lg" title="Salvar" style="margin-top:0px; margin-left:30px; float:left;"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+        <button type="button" id="DeleteRow" disabled class="btn btn-default btn-lg" title="Borrar" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button>
+        <hr class="colored" style="margin-top:46px;"/>
+    </div>    
+    
+    <!-- Modal Informacion-->
+    <div class="modal fade" id="dialoginfo" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div id="colortitulo" class="modal-header modal-header-info">
+                    <h4 id="titulo" class="modal-title">Informaction</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="mensage" style="font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" >This is a small modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cerrar</button>
+                </div>
+            </div>            
+        </div>
+    </div>
+    
+    <div class="modal fade" id="dialoginfo3" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div id="colortitulo2" class="modal-header modal-header-info">
+                    <h4 id="titulo" class="modal-title">Borrar</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="mensage" style="font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" >Borrar Registro?.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="aceptarborrarlibro" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Aceptar</button>
+                    <button type="button" id="cancelarborrarlibro" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Cancelar</button>
+                </div>
+            </div>            
+        </div>
+    </div>  
+    
+    <div class="modal fade" id="dialoginfo2" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div id="colortitulo2" class="modal-header modal-header-info">
+                    <h4 id="titulo" class="modal-title">Borrar</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="mensage" style="font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" >Borrar Registro?.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="aceptarborrar" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Aceptar</button>
+                    <button type="button" id="cancelarborrar" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Cancelar</button>
+                </div>
+            </div>            
+        </div>
+    </div>
+    
+    <div class="modal fade" id="dialoginfo4" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div id="colortitulo2" class="modal-header modal-header-info">
+                    <h4 id="titulo" class="modal-title">Borrar</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="mensage4" style="font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:16px;" >Borrar Registro?.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="aceptarborrargridmaster" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Aceptar</button>
+                    <button type="button" id="cancelarborrargridmaster" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Cancelar</button>
+                </div>
+            </div>            
+        </div>
+    </div>
+        
+    <script>
+        $('#datepicker').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy-mm-dd'
+        });
+        $('#datepicker2').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy-mm-dd'
+        });
+        $('#fechaaltalibro').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'yyyy-mm-dd'
+        });
+    </script>
+    
+</body>
+</html>
