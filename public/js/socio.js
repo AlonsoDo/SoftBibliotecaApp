@@ -654,7 +654,193 @@ function DeleteRowMasterGrid(){
     });
 }
 
-function AceptarBorrarGridMaster(){
-    alert('test');
+function AceptarBorrarGridMaster(){    
+    var CellLote = $('#master').jqGrid('getCell',IdMasterGrid,'IdLote');    
+    var toDelete = $("#master").jqGrid('getGridParam','selrow');
+    $('#master').jqGrid('delRowData',toDelete);
+    $('#detail').jqGrid('clearGridData');
+    
+    $.ajax({
+	statusCode:{500:function(){
+                if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+                    $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning');  
+                }                
+                $('#mensage').text('Error con el Servidor');
+                $('#titulo').text('Atenction!');
+                $('#dialoginfo').modal({
+                    backdrop:'static',
+                    keyboard:false  
+                }); 
+            }
+        },        
+        url: 'http://localhost:3000/borrarrowgridmaster',                    
+        type: 'delete',
+        contentType: 'application/json; charset=utf-8',
+	data: JSON.stringify({CellLote:CellLote}),
+        success: function(data){                       
+        },                    
+        error: function(error){
+            if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+                $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning'); 
+            } 
+            $('#mensage').text('Error con el Servidor');
+            $('#titulo').text('Atencion!');
+            $('#dialoginfo').modal({
+                backdrop:'static',
+                keyboard:false  
+            });                        
+        }
+    });
+    
+    $.ajax({
+	statusCode:{500:function(){
+                if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+                    $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning');  
+                }                
+                $('#mensage').text('Error con el Servidor');
+                $('#titulo').text('Atenction!');
+                $('#dialoginfo').modal({
+                    backdrop:'static',
+                    keyboard:false  
+                }); 
+            }
+        },        
+        url: 'http://localhost:3000/borrardetailgrid',                    
+        type: 'delete',
+        contentType: 'application/json; charset=utf-8',
+	data: JSON.stringify({CellLote:CellLote}),
+        success: function(data){
+            if (($('#colortitulo').attr('class'))=='modal-header modal-header-warning'){
+                $('#colortitulo').removeClass('modal-header modal-header-warning').addClass('modal-header modal-header-info'); 
+            } 
+            $('#mensage').text('Lote Borrado');
+            $('#titulo').text('Informacion');
+            $('#dialoginfo').modal({
+                backdrop:'static',
+                keyboard:false  
+            })           
+        },                    
+        error: function(error){
+            if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+                $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning'); 
+            } 
+            $('#mensage').text('Error con el Servidor');
+            $('#titulo').text('Atencion!');
+            $('#dialoginfo').modal({
+                backdrop:'static',
+                keyboard:false  
+            });                        
+        }
+    });
+    
 }
 
+function EntradaMasterGrid(){
+    
+    var FormattedDate = new Date().
+            toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).
+            replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');            
+    
+    var myGrid = $('#master');
+    var selectedRowId = myGrid.jqGrid ('getGridParam', 'selrow');
+    var row_id = myGrid.jqGrid ('getCell', selectedRowId, 'id');                
+    var IdLote = $('#master').jqGrid('getCell',row_id,'IdLote');
+    
+    $("#master").jqGrid("setCell", row_id, "FechaEntrada", FormattedDate);
+    
+    $.ajax({
+	statusCode:{500:function(){
+                if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+                    $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning');  
+                }                
+                $('#mensage').text('Error con el Servidor');
+                $('#titulo').text('Atenction!');
+                $('#dialoginfo').modal({
+                    backdrop:'static',
+                    keyboard:false  
+                }); 
+            }
+        },        
+        url: 'http://localhost:3000/entradamastergrid',                    
+        type: 'put',
+        contentType: 'application/json; charset=utf-8',
+	data: JSON.stringify({FormattedDate:FormattedDate,IdLote:IdLote
+                                    }),
+        success: function(data){
+                        
+            if (($('#colortitulo').attr('class'))=='modal-header modal-header-warning'){
+                $('#colortitulo').removeClass('modal-header modal-header-warning').addClass('modal-header modal-header-info'); 
+            } 
+            $('#mensage').text('Entrada Modificada');
+            $('#titulo').text('Informacion');
+            $('#dialoginfo').modal({
+                backdrop:'static',
+                keyboard:false  
+            });                                
+            
+        },                    
+        error: function(error){
+            if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+                $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning'); 
+            } 
+            $('#mensage').text('Error con el Servidor');
+            $('#titulo').text('Atencion!       ');
+            $('#dialoginfo').modal({
+                backdrop:'static',
+                keyboard:false  
+            });                        
+        }
+    });
+    
+    var grid = jQuery("#detail");
+    var ids = grid.jqGrid('getDataIDs');
+   
+    for (var i = 0; i < ids.length; i++) {
+       var rowId = ids[i];
+       $("#detail").jqGrid("setCell", rowId, "FechaEntrada", FormattedDate);
+    }
+    
+     $.ajax({
+	statusCode:{500:function(){
+                if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+                    $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning');  
+                }                
+                $('#mensage').text('Error con el Servidor');
+                $('#titulo').text('Atenction!');
+                $('#dialoginfo').modal({
+                    backdrop:'static',
+                    keyboard:false  
+                }); 
+            }
+        },        
+        url: 'http://localhost:3000/entradadetailgrid',                    
+        type: 'put',
+        contentType: 'application/json; charset=utf-8',
+	data: JSON.stringify({FormattedDate:FormattedDate,IdLote:IdLote
+                                    }),
+        success: function(data){
+                        
+            if (($('#colortitulo').attr('class'))=='modal-header modal-header-warning'){
+                $('#colortitulo').removeClass('modal-header modal-header-warning').addClass('modal-header modal-header-info'); 
+            } 
+            $('#mensage').text('Entrada Modificada');
+            $('#titulo').text('Informacion');
+            $('#dialoginfo').modal({
+                backdrop:'static',
+                keyboard:false  
+            });                                
+            
+        },                    
+        error: function(error){
+            if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+                $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning'); 
+            } 
+            $('#mensage').text('Error con el Servidor');
+            $('#titulo').text('Atencion!       ');
+            $('#dialoginfo').modal({
+                backdrop:'static',
+                keyboard:false  
+            });                        
+        }
+    });
+}
