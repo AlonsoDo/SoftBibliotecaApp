@@ -21,7 +21,7 @@ app.post('/nuevosocio',function(req,res){
     
     console.log(req.body.nombresocio);
     
-    var client = mysql.createConnection({
+    /*var client = mysql.createConnection({
       
       user: 'root',
       password: 'charly',
@@ -29,7 +29,17 @@ app.post('/nuevosocio',function(req,res){
       port: '3306',
             
     }); 
-    client.query('USE biblioteca');
+    client.query('USE biblioteca');*/
+    
+    var client = mysql.createConnection({
+      
+      user: 'be9dd6c66aae30',
+      password: 'd014fad4',
+      host: 'eu-cdbr-west-02.cleardb.net',
+      port: '3306',
+            
+    }); 
+    client.query('USE heroku_24639f1fc7ccd38');
         
     client.query("INSERT INTO socios(Nombre,PrimerApellido,SegundoApellido,DNI,FechaNacimiento,FechaAlta,Direccion,Email,CodigoPostal,Ciudad,PersonaContacto,TelefonoMovil,TelefonoFijo) VALUES ('"
                  +req.body.Nombre+"','"+req.body.PrimerApellido+"','"+req.body.SegundoApellido+"','"+req.body.DNI+"','"+req.body.FechaNacimiento+"','"+req.body.FechaAlta+"','"+req.body.Direccion+"','"+req.body.Email+"','"+req.body.CodigoPostal+"','"+req.body.CiudadSocio+"','"+req.body.PersonaContacto+"','"+req.body.MobilSocio+"','"+req.body.FijoSocio+"')",
