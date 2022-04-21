@@ -2,7 +2,7 @@ var express = require('express');
 var bodyParser= require('body-parser');
 var methodOverride = require('method-override');
 var app = express();
-var mysql = require('mysql');
+var mysql = require('mysql2');
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({extended:false}));
@@ -118,7 +118,7 @@ app.post('/buscarsocio',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
