@@ -17,25 +17,15 @@ app.post('/nuevosocio',function(req,res){
     
     console.log(req.body.nombresocio);
     
-    /*var client = mysql.createConnection({
+    var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
     }); 
-    client.query('USE biblioteca');*/
-    
-    var client = mysql.createConnection({
-      
-      user: 'be9dd6c66aae30',
-      password: 'd014fad4',
-      host: 'eu-cdbr-west-02.cleardb.net',
-      port: '3306',
-            
-    }); 
-    client.query('USE heroku_24639f1fc7ccd38');
+    client.query('USE biblioteca');    
         
     client.query("INSERT INTO socios(Nombre,PrimerApellido,SegundoApellido,DNI,FechaNacimiento,FechaAlta,Direccion,Email,CodigoPostal,Ciudad,PersonaContacto,TelefonoMovil,TelefonoFijo) VALUES ('"
                  +req.body.Nombre+"','"+req.body.PrimerApellido+"','"+req.body.SegundoApellido+"','"+req.body.DNI+"','"+req.body.FechaNacimiento+"','"+req.body.FechaAlta+"','"+req.body.Direccion+"','"+req.body.Email+"','"+req.body.CodigoPostal+"','"+req.body.CiudadSocio+"','"+req.body.PersonaContacto+"','"+req.body.MobilSocio+"','"+req.body.FijoSocio+"')",
@@ -62,7 +52,7 @@ app.put('/updatesocio',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -153,7 +143,7 @@ app.post('/buscarsociofiltro',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -185,7 +175,7 @@ app.delete('/borrarsocio',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -215,7 +205,7 @@ app.post('/cargarsocio',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -247,7 +237,7 @@ app.post('/salvardetailgrid',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -291,7 +281,7 @@ app.post('/nuevolibro',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -323,7 +313,7 @@ app.put('/updatelibro',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -366,7 +356,7 @@ app.post('/buscarlibro',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -401,7 +391,7 @@ app.post('/buscarlibrofiltro',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -433,7 +423,7 @@ app.delete('/borrarlibro',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -465,7 +455,7 @@ app.delete('/borrarrowgridmaster',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -497,7 +487,7 @@ app.delete('/borrardetailgrid',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -525,7 +515,7 @@ app.put('/entradamastergrid',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
@@ -556,7 +546,7 @@ app.put('/entradadetailgrid',function(req,res){
     var client = mysql.createConnection({
       
       user: 'root',
-      password: 'charly',
+      password: 'root',
       host: '',
       port: '3306',
             
