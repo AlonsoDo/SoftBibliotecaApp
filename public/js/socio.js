@@ -571,6 +571,7 @@ function PrevSocio(){
 
 function CargarSocio(){
     
+    //IdMasterGrid = 0;
     IdMasterGrid = IdMasterGrid + 10;
     var Id = IdMasterGrid.toString();
     
@@ -623,9 +624,10 @@ function CargarSocio(){
                $('#IniSocio').prop('disabled',false);
                $('#PrevSocio').prop('disabled',false); 
             }
-            
+            //alert('Test')
             $("#master").jqGrid("addRowData",IdMasterGrid,{id:Id,IdLote:IdLote,IdSocio:CodeSocio,NombreSocio:NombreCompleto,FechaSalida:FormattedDate},"first");
-                
+            //$('#master').trigger('reloadGrid'); 
+            //alert(jQuery("#master").jqGrid('getGridParam', 'records'));    
         },                    
         error: function(error){
             if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
@@ -655,6 +657,7 @@ function DeleteRowMasterGrid(){
 }
 
 function AceptarBorrarGridMaster(){    
+    
     var CellLote = $('#master').jqGrid('getCell',IdMasterGrid,'IdLote');    
     var toDelete = $("#master").jqGrid('getGridParam','selrow');
     $('#master').jqGrid('delRowData',toDelete);
@@ -676,7 +679,7 @@ function AceptarBorrarGridMaster(){
         url: 'http://localhost:3000/borrarrowgridmaster',                    
         type: 'delete',
         contentType: 'application/json; charset=utf-8',
-	data: JSON.stringify({CellLote:CellLote}),
+	    data: JSON.stringify({CellLote:CellLote}),
         success: function(data){                       
         },                    
         error: function(error){
@@ -718,7 +721,8 @@ function AceptarBorrarGridMaster(){
             $('#dialoginfo').modal({
                 backdrop:'static',
                 keyboard:false  
-            })           
+            }) 
+            $('#DeleteRowMasterGrid').prop('disabled',true);          
         },                    
         error: function(error){
             if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){

@@ -245,8 +245,7 @@ app.post('/salvardetailgrid',function(req,res){
     client.query('USE biblioteca');    
             
     var IniCommand = "INSERT INTO detail(IdLote,IdSocio,IdLibro,TituloLibro,FechaSalida) VALUES";
-    var LastCommand = "";
-    
+    var LastCommand = "";    
     
     for (var i = 0; i < req.body.aGridData.length; i++){        
         if (i ==(req.body.aGridData.length -1)) {

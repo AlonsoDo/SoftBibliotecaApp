@@ -337,12 +337,17 @@
             });
             
             $('#DeleteRow').click(function(){ 
+                $('#DeleteRow').prop('disabled',true);
                 var toDelete = $("#detail").jqGrid('getGridParam','selrow');
                 $('#detail').jqGrid('delRowData',toDelete);                    
             });
             
             $('#SalvarDetailGrid').click(function(){
-                SalvarDetailGrid();    
+                SalvarDetailGrid();  
+                $('#SalvarDetailGrid').prop('disabled',true);
+                $('#DeleteRow').prop('disabled',true);
+                $('#DeleteRowMasterGrid').prop('disabled',true);  
+                $('#EntradaMasterGrid').prop('disabled',true);                
             });
             
             $('#DeleteRowMasterGrid').click(function(){
@@ -355,11 +360,13 @@
             
             $('#EntradaMasterGrid').click(function(){
                 EntradaMasterGrid();
+                $('#DeleteRowMasterGrid').prop('disabled',true);  
+                $('#EntradaMasterGrid').prop('disabled',true); 
             });
             
             $("#master").click(function () {
                 $('#EntradaMasterGrid').prop('disabled',false);
-            });
+            });            
                         
         });  // End 
         
@@ -558,8 +565,10 @@
         <hr class="colored" style="margin-top:10px;"/>
         <button type="button" id="DeleteRowMasterGrid" disabled class="btn btn-default btn-lg" title="Borrar" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button>
         <button type="button" id="EntradaMasterGrid" disabled class="btn btn-default btn-lg" title="Entrada" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
+        <button type="button" id="BuscarMaster" class="btn btn-default btn-lg" title="Buscar Socio" style="margin-top:0px; margin-left:20px; float:left;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+        <button type="button" id="BuscarMasterFiltro" class="btn btn-default btn-lg" title="Filtrar Socio" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span></button>
         <hr class="colored" style="margin-top:46px;"/>        
-        <div style="margin-left:30px; margin-top:60px;">
+        <div style="margin-left:30px; margin-top:20px;">
             <table id="detail"></table>
         </div>
         <hr class="colored" style="margin-top:10px;"/>

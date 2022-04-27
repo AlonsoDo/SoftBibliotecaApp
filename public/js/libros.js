@@ -496,9 +496,23 @@ function CargarLibro(){
             replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
     var CellLote = $('#master').jqGrid('getCell',IdMasterGrid,'IdLote');
         
-    $("#detail").jqGrid("addRowData",IdDetailGrid,{id:Id,IdLote:CellLote,IdSocio:CodeSocio,IdLibro:CodeLibro,TituloLibro:TituloLibro,FechaSalida:FormattedDate},"first");
+    var NunbersOfRows = $("#master").getGridParam("reccount");    
+    if (NunbersOfRows == 0) {
+        if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
+            $('#colortitulo').removeClass('modal-header modal-header-info').addClass('modal-header modal-header-warning'); 
+        } 
+        $('#mensage').text('Debe cargar primero un socio');
+        $('#titulo').text('Atencion!');
+        $('#dialoginfo').modal({
+            backdrop:'static',
+            keyboard:false  
+        });
+    } else {
+        $("#detail").jqGrid("addRowData",IdDetailGrid,{id:Id,IdLote:CellLote,IdSocio:CodeSocio,IdLibro:CodeLibro,TituloLibro:TituloLibro,FechaSalida:FormattedDate},"first");
+    }
     
     $('#SalvarDetailGrid').prop('disabled',false);
+    $('#DeleteRow').prop('disabled',false);
 }
 
 function SalvarDetailGrid(){
@@ -523,7 +537,7 @@ function SalvarDetailGrid(){
         url: 'http://localhost:3000/salvardetailgrid',                    
         type: 'post',
         contentType: 'application/json; charset=utf-8',
-	data: JSON.stringify({aGridData:aGridData}),
+	    data: JSON.stringify({aGridData:aGridData}),
         success: function(data){            
             if (($('#colortitulo').attr('class'))=='modal-header modal-header-warning'){
                 $('#colortitulo').removeClass('modal-header modal-header-warning').addClass('modal-header modal-header-info'); 
@@ -533,7 +547,11 @@ function SalvarDetailGrid(){
             $('#dialoginfo').modal({
                 backdrop:'static',
                 keyboard:false  
-            });            
+            }); 
+            $('#master').jqGrid('clearGridData');
+            $('#detail').jqGrid('clearGridData');
+            //jQuery("#detail").remove();
+            //jQuery("#master").remove();           
         },                    
         error: function(error){
             if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
