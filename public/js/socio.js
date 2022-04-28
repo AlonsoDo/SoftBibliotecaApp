@@ -605,7 +605,7 @@ function CargarSocio(){
             IdLote = data.insertId;
             
             $('#CargarSocio').prop('disabled',true);            
-            $('#DeleteRowMasterGrid').prop('disabled',false);
+            $('#DeleteRowMasterGrid').prop('disabled',true);
             
             if (($('#colortitulo').attr('class'))=='modal-header modal-header-warning'){
                 $('#colortitulo').removeClass('modal-header modal-header-warning').addClass('modal-header modal-header-info'); 
@@ -624,10 +624,9 @@ function CargarSocio(){
                $('#IniSocio').prop('disabled',false);
                $('#PrevSocio').prop('disabled',false); 
             }
-            //alert('Test')
+            
             $("#master").jqGrid("addRowData",IdMasterGrid,{id:Id,IdLote:IdLote,IdSocio:CodeSocio,NombreSocio:NombreCompleto,FechaSalida:FormattedDate},"first");
-            //$('#master').trigger('reloadGrid'); 
-            //alert(jQuery("#master").jqGrid('getGridParam', 'records'));    
+               
         },                    
         error: function(error){
             if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){
@@ -711,7 +710,7 @@ function AceptarBorrarGridMaster(){
         url: 'http://localhost:3000/borrardetailgrid',                    
         type: 'delete',
         contentType: 'application/json; charset=utf-8',
-	data: JSON.stringify({CellLote:CellLote}),
+	    data: JSON.stringify({CellLote:CellLote}),
         success: function(data){
             if (($('#colortitulo').attr('class'))=='modal-header modal-header-warning'){
                 $('#colortitulo').removeClass('modal-header modal-header-warning').addClass('modal-header modal-header-info'); 
@@ -722,7 +721,8 @@ function AceptarBorrarGridMaster(){
                 backdrop:'static',
                 keyboard:false  
             }) 
-            $('#DeleteRowMasterGrid').prop('disabled',true);          
+            $('#DeleteRowMasterGrid').prop('disabled',true);
+            $('#EntradaMasterGrid').prop('disabled',true);          
         },                    
         error: function(error){
             if (($('#colortitulo').attr('class'))=='modal-header modal-header-info'){

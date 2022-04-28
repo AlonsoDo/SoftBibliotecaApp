@@ -366,7 +366,12 @@
             
             $("#master").click(function () {
                 $('#EntradaMasterGrid').prop('disabled',false);
-            });            
+                $('#DeleteRowMasterGrid').prop('disabled',false);
+            });   
+            
+            $('#DeleteRowMasterGrid').prop('disabled',true);
+            $('#EntradaMasterGrid').prop('disabled',true);
+
                         
         });  // End 
         
@@ -554,7 +559,7 @@
                         </select>                        
                     </div>                
                 </div>                
-             </div>         
+            </div>         
         </div>
     </div>
     
@@ -567,14 +572,31 @@
         <button type="button" id="EntradaMasterGrid" disabled class="btn btn-default btn-lg" title="Entrada" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
         <button type="button" id="BuscarMaster" class="btn btn-default btn-lg" title="Buscar Socio" style="margin-top:0px; margin-left:20px; float:left;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
         <button type="button" id="BuscarMasterFiltro" class="btn btn-default btn-lg" title="Filtrar Socio" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span></button>
-        <hr class="colored" style="margin-top:46px;"/>        
+        <input type="text" id="contentbuscarsociomaster" class="form-control" maxlength="200" placeholder="Buscar Socio" style="float:left; margin-left:16px; margin-top:0px; width:360px; font-weight:bold; font-size:16px;"/>
+        <select style="float:left; margin-top:0px; font-weight:bold; font-size:16px; width:200px; height:33px; margin-left:10px;" id="buscarenmaster">
+            <option value="IdSocio" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Codigo de Socio</label>">Codigo de Socio</option>
+            <option value="NombreSocio" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Titulo del Libro</label>">Nombre del Socio</option>
+            <option value="FechaSalida" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Autor del Libro</label>">Fecha de Salida</option>
+            <option value="FechaEntrada" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Editorial del Libro</label>">Fecha de Entrada</option>           
+        </select>   
+        <hr class="colored" style="margin-top:56px;"/>        
         <div style="margin-left:30px; margin-top:20px;">
             <table id="detail"></table>
         </div>
         <hr class="colored" style="margin-top:10px;"/>
         <button type="button" id="SalvarDetailGrid" disabled class="btn btn-default btn-lg" title="Salvar" style="margin-top:0px; margin-left:30px; float:left;"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
         <button type="button" id="DeleteRow" disabled class="btn btn-default btn-lg" title="Borrar" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button>
-        <hr class="colored" style="margin-top:46px;"/>
+        <button type="button" id="BuscarDetail" class="btn btn-default btn-lg" title="Buscar Socio" style="margin-top:0px; margin-left:20px; float:left;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+        <button type="button" id="BuscarDetailFiltro" class="btn btn-default btn-lg" title="Filtrar Socio" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span></button>
+        <input type="text" id="contentbuscarsociodetail" class="form-control" maxlength="200" placeholder="Buscar Socio" style="float:left; margin-left:16px; margin-top:0px; width:360px; font-weight:bold; font-size:16px;"/>
+        <select style="float:left; margin-top:0px; font-weight:bold; font-size:16px; width:200px; height:33px; margin-left:10px;" id="buscarendetail">
+            <option value="IdSocio" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Codigo de Socio</label>">Codigo de Socio</option>
+            <option value="IdLibro" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Codigo de Socio</label>">Codigo de Libro</option>
+            <option value="TituloLibro" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Titulo del Libro</label>">Titulo del Libro</option>
+            <option value="FechaSalida" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Autor del Libro</label>">Fecha de Salida</option>
+            <option value="FechaEntrada" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Editorial del Libro</label>">Fecha de Entrada</option>           
+        </select>
+        <hr class="colored" style="margin-top:56px;"/>
     </div>    
     
     <!-- Modal Informacion-->
