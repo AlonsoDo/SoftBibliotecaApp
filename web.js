@@ -570,3 +570,47 @@ app.put('/entradadetailgrid',function(req,res){
     });   
     
 });
+
+app.post('/buscarsociomaster',function(req,res){
+    
+  console.log(req.body.OrderSearch);
+  console.log(req.body.ContentSearch);
+  
+  var OrderSearch = req.body.OrderSearch;
+  var ContentSearch = req.body.ContentSearch;
+  
+  if (OrderSearch == 'FechaSalida'){
+    Command = "SELECT * FROM master WHERE FechaSalida = '" + ContentSearch + "' + INTERVAL 1 DAY;";
+  }else if (OrderSearch == 'FechaEntrada'){
+    Command = "SELECT * FROM master WHERE FechaEntrada = '" + ContentSearch + "' + INTERVAL 1 DAY;";
+  }else if (OrderSearch == 'IdSocio'){
+    Command = "SELECT * FROM master WHERE IdSocio = '" + ContentSearch + "';";
+  }else if (OrderSearch == 'NombreSocio'){
+    Command = "SELECT * FROM master WHERE NombreSocio = '" + ContentSearch + "';";
+  } 
+
+  var client = mysql.createConnection({
+    
+    user: 'root',
+    password: 'root',
+    host: '',
+    port: '3306',
+          
+  }); 
+  client.query('USE biblioteca');
+      
+  client.query( Command ,
+  function getSocio(err, results, fields) { 
+      if (err) {
+        console.log("Error: " + err.message);
+        throw err;
+        res.send(500,err.message);
+      }else{
+        console.log(results);
+        console.log(results.length);
+        res.json(results);          
+      }
+      client.end();         
+  });     
+  
+});

@@ -370,8 +370,34 @@
             });   
             
             $('#DeleteRowMasterGrid').prop('disabled',true);
-            $('#EntradaMasterGrid').prop('disabled',true);
+            $('#EntradaMasterGrid').prop('disabled',true);            
 
+            $("#BuscarMaster").click(function () {
+                BuscarSocioMaster();
+            });
+
+            $('#buscarenmaster').on('change', function () {
+                $("#contentbuscarsociomaster").datepicker("destroy"); 
+                if (this.value == 'IdSocio'){
+                    $("#contentbuscarsociomaster").width(486); 
+                    $('#contentbuscarsociomaster').css('margin-top',2);      
+                }else if (this.value == 'NombreSocio'){
+                    $("#contentbuscarsociomaster").width(486); 
+                    $('#contentbuscarsociomaster').css('margin-top',2);
+                }else if (this.value == 'FechaSalida'){
+                    $("#contentbuscarsociomaster").width(400);
+                    $('#contentbuscarsociomaster').datepicker({
+                        uiLibrary: 'bootstrap4',
+                        format: 'yyyy-mm-dd'       
+                    });
+                }else if (this.value == 'FechaEntrada'){
+                    $("#contentbuscarsociomaster").width(400);
+                    $('#contentbuscarsociomaster').datepicker({
+                        uiLibrary: 'bootstrap4',
+                        format: 'yyyy-mm-dd'       
+                    });
+                }
+            });            
                         
         });  // End 
         
@@ -507,7 +533,7 @@
         <input type="text" id="editoriallibro" class="form-control" maxlength="100" placeholder="Introducir Editorial Libro" style="float:left; margin-left:6px; margin-top:20px; width:380px; font-weight:bold; font-size:16px;"/>
         <div style="float:left; border:0px black solid; width:500px; height:60px; margin-top:16px;">    
             <label style="margin:10px 0px 0px 20px; float:left; font-weight:bold; font-size:16px;">Fecha de Alta:</label>
-            <input style="margin:10px 0px 0px 10px; float:left; font-weight:bold; font-size:16px; width:200px; " id="fechaaltalibro" width="288" size="22" type="text" class="form-control"/>
+            <input style="margin:10px 0px 0px 10px; float:left; font-weight:bold; font-size:16px; width:200px;" id="fechaaltalibro" width="288" size="22" type="text" class="form-control"/>
         </div>
         <label style="margin:10px 0px 0px 30px; display:block; float:left; font-weight:bold; font-size:16px;">Idioma Original:</label>
         <input type="text" id="idiomaoriginallibro" class="form-control" maxlength="100" placeholder="Introducir Idioma Original" style="float:left; margin-left:6px; margin-top:5px; width:380px; font-weight:bold; font-size:16px;"/>
@@ -572,7 +598,11 @@
         <button type="button" id="EntradaMasterGrid" disabled class="btn btn-default btn-lg" title="Entrada" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></button>
         <button type="button" id="BuscarMaster" class="btn btn-default btn-lg" title="Buscar Socio" style="margin-top:0px; margin-left:20px; float:left;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
         <button type="button" id="BuscarMasterFiltro" class="btn btn-default btn-lg" title="Filtrar Socio" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span></button>
-        <input type="text" id="contentbuscarsociomaster" class="form-control" maxlength="200" placeholder="Buscar Socio" style="float:left; margin-left:16px; margin-top:0px; width:360px; font-weight:bold; font-size:16px;"/>
+        
+        <div style="float:left; background-color:#e8e8e8; border:0px black solid; width:500px; height:32px; margin-top:0px;">
+            <input type="text" id="contentbuscarsociomaster" class="form-control" maxlength="200" placeholder="Buscar Socio" style="float:left; margin-left:8px; margin-top:2px; width:496px; font-weight:bold; font-size:16px;"/>
+        </div>      
+        
         <select style="float:left; margin-top:0px; font-weight:bold; font-size:16px; width:200px; height:33px; margin-left:10px;" id="buscarenmaster">
             <option value="IdSocio" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Codigo de Socio</label>">Codigo de Socio</option>
             <option value="NombreSocio" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Titulo del Libro</label>">Nombre del Socio</option>
@@ -588,7 +618,7 @@
         <button type="button" id="DeleteRow" disabled class="btn btn-default btn-lg" title="Borrar" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button>
         <button type="button" id="BuscarDetail" class="btn btn-default btn-lg" title="Buscar Socio" style="margin-top:0px; margin-left:20px; float:left;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
         <button type="button" id="BuscarDetailFiltro" class="btn btn-default btn-lg" title="Filtrar Socio" style="margin-top:0px; margin-left:10px; float:left;"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span></button>
-        <input type="text" id="contentbuscarsociodetail" class="form-control" maxlength="200" placeholder="Buscar Socio" style="float:left; margin-left:16px; margin-top:0px; width:360px; font-weight:bold; font-size:16px;"/>
+        <input type="text" id="contentbuscarsociodetail" class="form-control" maxlength="200" placeholder="Buscar Socio o Libro" style="float:left; margin-left:16px; margin-top:0px; width:360px; font-weight:bold; font-size:16px;"/>
         <select style="float:left; margin-top:0px; font-weight:bold; font-size:16px; width:200px; height:33px; margin-left:10px;" id="buscarendetail">
             <option value="IdSocio" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Codigo de Socio</label>">Codigo de Socio</option>
             <option value="IdLibro" data-content="<label style='color:black; font-weight:bold; font-size:16px;'>Codigo de Socio</label>">Codigo de Libro</option>
@@ -672,14 +702,16 @@
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
         });
+
         $('#datepicker2').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
         });
+
         $('#fechaaltalibro').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'yyyy-mm-dd'
-        });
+        });        
     </script>
     
 </body>
